@@ -1,0 +1,92 @@
+  <!--tab菜单-->
+  <div class="feed-nav">
+  <php>if(CheckPermission('core_normal','send_message')){</php>
+    <div class="nset-hd">
+    <h3>{:L('PUBLIC_PRIVATE_MESSAGE')}
+      <span class="close-ico right">
+        <img onclick="ui.box.close()" src="__THEME__/image/exit.png"/>
+      </span>
+
+      <a href="javascript:;" event-node="postMsg" onclick="ui.sendmessage()" class="btn-green-small right btn-sx">
+      <span style="font-size:12px;">发私信</span></a>
+    </h3>
+    </div>
+  <php>}</php>
+  </div>
+  <!--tab菜单/end-->
+
+<div class="scrollarea">
+<div class="scrollY">
+        <div class="extend-message wid">
+
+          <!--数据列表-->
+          <input type="hidden" id="type" value="{$type}"/>
+
+          <!--消息列表-->
+          <div class="feed_lists" id="mfeed-lists">
+              <if condition="empty($data)">
+              <div class="note">{:L('PUBLIC_NO_MORE_INFO')}</div>
+              <else/>
+              <volist name="data" id="vo">
+                <dl class="feed_list clearfix" id="message_{$vo['list_id']}" model-node='gotoDetail' model-args="id={$vo['list_id']}&type={$vo['type']}">
+                    <dt class="face">
+                      <php> if($vo['last_message']['to_uid'][0] == $mid){</php>
+                        <a href="{$vo['last_message']['user_info']['space_url']}"><img src="{$vo['last_message']['user_info']['avatar_middle']}" width="50" height="50" event-node="face_card" uid="{$vo['last_message']['user_info']['uid']}"></a>
+                      <php>}else{</php>
+                        <a href="{$vo['to_user_info'][$vo['last_message']['to_uid'][0]]['space_url']}"><img src="{$vo['to_user_info'][$vo['last_message']['to_uid'][0]]['avatar_middle']}" width="50" height="50" event-node="face_card" uid="{$vo['to_user_info'][$vo['last_message']['to_uid'][0]]['uid']}"></a>
+                      <php>}</php>
+                    </dt>
+                    
+                    <dd class="content message_block">
+                      <p class="hd notitle">
+
+                      <php> if($vo['last_message']['user_info']['uid'] == $mid){</php>
+                      <php>
+                      $sendToUserInfo = getSubByKey($vo['to_user_info'], 'space_link');
+                      </php>
+                      {:L('PUBLIC_SENTTO')} {:implode('、', $sendToUserInfo)}：
+                      <php>}else{</php>
+                      {$vo.last_message.user_info.space_link}{:L('PUBLIC_SAY')}：
+                      <php>}</php>
+                      <php>if($vo['new']>0){</php><i class="ico-new"></i><php>}</php>
+                      </p>
+                      <dl class="comment comment-mes">
+                      <a style="color:#999 !important;;" href="javascript:;" onclick="message.messageDetail('message_detail',{$vo['type']},{$vo['list_id']})">{$vo.last_message.content|parse_html}</a>
+                      </dl>
+                      <p class="info">
+                      <span class="right">
+                        <em class="hover">
+                        <!--删除-->
+                        <php>if(CheckPermission('core_admin','message_del')):</php>
+                        <a href="javascript:void(0);" onclick="message.delMessage({$vo['list_id']})">删除</a>
+                        <php>endif;</php>
+                        </em>
+                        <!--回复-->
+                        &nbsp;&nbsp;<a class="message_block_click" href="javascript:;" onclick="message.messageDetail('message_detail',{$vo['type']},{$vo['list_id']})">
+                          <php> if($vo['from_uid'] == $mid){</php>查看<php>}else{</php>回复<php>}</php>
+                        </a>
+                      </span>
+                      <span>
+                      <a style="color:#999 !important;" href="javascript:;" onclick="message.messageDetail('message_detail',{$vo['type']},{$vo['list_id']})">{$vo.list_ctime|friendlyDate}</a>
+                      </span>
+                      </p>
+                  </dd>
+                  <dt class="xline"></dt>
+                </dl>
+              </volist>
+              <div id='page' class='page'>{$html}</div>
+              </if>
+          </div>
+        </div>
+
+<script type="text/javascript">
+$('.message_block').click(function(e){
+	var elt = e.srcElement?e.srcElement:e.target;
+	if(!$(elt).is('a')){
+		$(this).find('a.message_block_click').click();
+	}
+});
+</script>
+<script src="__THEME__/js/message/module.message.js"></script>
+</div>
+</div>

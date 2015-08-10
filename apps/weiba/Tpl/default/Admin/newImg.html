@@ -1,0 +1,71 @@
+<include file="../Public/_header" />
+<div class="so_main">  
+  <div class="page_tit">登录展示图</div>
+  <div class="Toolbar_inbox">
+	<a href="{:U('weiba/Admin/indexPost')}" class="btn_a"><span>返回列表</span></a>
+  </div>
+  <form action ="{:U('weiba/Admin/newImg')}" method="post" >
+    <div class="form2 no_line">
+      <dl class="lineD">
+      <php>if(!$img){</php>
+        <dt>
+          帖子ID：
+        </dt>
+        <dd>
+      	<div>
+           <input name="post_id" id="post_id" type="text" value="{$img.post_id}" class="s-txt" style="width:200px;" /> 
+          <p>请输入帖子ID</p>
+        </dd>
+        <php>}else{</php>
+        <input name="post_id" type="hidden" value="{$img.post_id}"  /> 
+        <php>}</php>
+        <dt>
+          摘要图：
+        </dt>
+        <dd>
+      	<div><php>$upkey=$pk='img_1';$defaultS = $img['index_img'];</php>
+			<div id="divup_{$upkey}" type="file" rel="{$upkey}">
+			<input type="file" name="attach" rel="{$upkey}" onchange="upload('{$pk}',this)" urlquery='attach_type=feed_image&upload_type=image&thumb=1'></div>
+           <div id='show_{$pk}'>
+            <php>if($defaultS && is_numeric($defaultS)){</php>
+              <img src="{$defaultS|getImageUrlByAttachId}" class="pic-size">
+            <php>}elseif (in_array($defaultS, array('level1.png', 'level2.png', 'level3.png', 'level4.png', 'level5.png', 'level6.png', 'level7.png', 'level8.png', 'level9.png', 'level10.png'))){</php>
+              <img src="__THEME__/image/level/{$defaultS}" class="pic-size" />
+            <php>}</php>
+          </div>
+           <input name="{$pk}" id="form_{$pk}" type="hidden" value="{$defaultS}" class="s-txt" style="width:200px;" <neq name='event' value='' > onchange="{$event}"</neq>/>
+		   <!-- </FORM> -->
+    		</div>   
+          <p>登录图片大小以780px*310px为宜。</p>
+        </dd>
+<!--         <dt>
+          外链地址：
+        </dt>
+        <dd>
+      	<div>
+           <input name="url"  type="text" value="{$img.url}" class="s-txt" style="width:200px;" />
+          <p>请输入完整链接。如：http://www.baidu.com</p>
+        </dd> -->
+      </dl>
+      <div class="page_btm">
+        <input type="hidden" class="btn_b" name="id" value="{$_GET['id']}" />
+        <input type="submit" class="btn_b" value="确定" />
+      </div>
+    </div>
+  </form>
+</div>
+<script>
+
+function upload(type,obj){
+    if("undefined"  != typeof(core.uploadFile)){
+        core.uploadFile.filehash = new Array();
+    }
+    core.plugInit('uploadFile',obj,function(data){
+        $('.input-content').remove();
+        $('#show_'+type).html('<img src="'+data.src+'" width="100" height="100">');
+        $('#form_'+type).val(data.attach_id);    
+    },'image');
+};
+
+</script>
+<include file="../Public/_footer" />

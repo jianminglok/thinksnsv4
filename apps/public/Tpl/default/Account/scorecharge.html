@@ -1,0 +1,112 @@
+<include file="__THEME__/public_header" />
+<link href="__APP__/level.css" rel="stylesheet" type="text/css" />
+<div id="page-wrap">
+	   <div id="main-wrap">
+	   	   	<div id="col" class="st-grid content-bg st-bg-b">
+                <div id="col4" class="main-left">
+                   <!--tab菜单-->
+                   <include file="_tabs" />
+                </div>
+                <div id="col7" class="main-right">
+                  <div class="extend minh person-set">
+                      <div class="tab-menu line-b-animate mb20">
+                        <ul>
+                            <li><span><a href="{:U('public/Account/scoredetail')}">我的积分</a></span></li>
+                            <li><span><a href="{:U('public/Account/scorerule')}">积分规则</a></span></li>
+                            <li><span><a href="{:U('public/Account/scorelevel')}">积分等级</a></span></li>
+                            <li class="current"><span><a href="{:U('public/Account/scorecharge')}">积分充值</a></span></li>
+                            <li><span><a href="{:U('public/Account/scoretransfer')}">积分转帐</a></span></li>
+                        </ul>
+                      </div>
+
+                      <!-- <form id="charge" name="alipayment" action="{:Addons::createAddonUrl('Alipay','alipay_to')}" method="post" target="_blank"> -->
+                              <dl class="form-set mb20">
+                                 <dd>
+                                    <div class="form-tt">充值方式</div>
+                                    <div class="form-row">
+                                        <label><input class="s-ck" type="radio" value="1" name="charge_type">财富通</label>
+                                        <label><input class="s-ck" type="radio" value="2" name="charge_type">支付宝</label>
+                                    </div>
+                                 </dd>
+                                 <dd>
+                                    <div class="form-tt">充值金额</div>
+                                    <div class="form-row">
+                                        <label><input class="s-ck" type="radio" value="10" name="charge_value" onclick="$('#charge_value_num').val('');">10</label>
+                                        <label><input class="s-ck" type="radio" value="60" name="charge_value" onclick="$('#charge_value_num').val('');">60</label>
+                                        <label><input id="charge_value_num" name="charge_value_num" onfocus="$('input:radio[name=\'charge_value\']').attr('checked',false);" class="txt" type="text">元</label>
+                                    </div>
+                                 </dd>
+                                 <dd>
+                                    <div class="form-tt"></div>
+                                    <div class="form-row"><font color="red">提示：人民币1元=1金币，单次最低充值100金币</font></div>
+                                 </dd>
+                                 <dd>
+                                    <div class="form-tt"></div>
+                                    <div class="form-row"><a href="javascript:void(0);" onclick="scorecharge()" class="btn-green-small"><span>充值</span></a></div>
+                                 </dd>
+                              </dl>
+                     <!-- </form> -->
+                      <div class="level-content">
+                        <h3>充值记录</h3>
+                        <table>
+                          <tbody>
+                            <tr>
+                              <th width="150">流水号</th>
+                              <th width="150">充值金额</th>
+                              <th width="300">充值方式</th>
+                              <th width="150">充值时间</th>
+                              <th width="150">充值状态</th>
+                            </tr>
+                            <volist name="charge_record.data" id="vo">
+                              <tr>
+                                <td width="150">{$vo.serial_number}</td>
+                                <td width="150">{$vo.charge_value}</td>
+                                <td width="300"><php>if($vo['charge_type']==1){ echo '财付通'; }else{ echo '支付宝'; }</php></td>
+                                <td width="150">{$vo.ctime|friendlyDate}</td>
+                                <th width="150"><php>if($vo['status']==1){ echo '成功'; }else{ echo '失败'; }</php></th>
+                              </tr>
+                            </volist>
+                          </tbody>
+                        </table>
+                        <div id="page" class="page" >{$charge_record.html}</div>
+                      </div>
+                  </div>
+                </div>
+           	 </div>
+	   </div>
+</div>
+<script>
+function scorecharge(){
+    var charge_type = $('input:radio[name="charge_type"]:checked').val();
+    if (!charge_type) {
+        ui.error('请选择充值方式');
+        return false;
+    }
+    var charge_value = $.trim($('#charge_value_num').val());
+    if(charge_value==''){
+        charge_value = $.trim($('input:radio[name="charge_value"]:checked').val());
+    }
+    if (charge_value!='' && isNaN(charge_value)) {
+        ui.error('请输入正确的充值金额');
+        return false;
+    }
+    if(parseInt(charge_value) != charge_value){
+        ui.error('充值金额必须为整数');
+        return false;
+    }
+    if(charge_value < 100){
+        ui.error('单次最低充值100金币');
+        return false;
+    }
+    $.post(U('public/Account/do_scorecharge'), {charge_type:charge_type,charge_value:charge_value}, function (res) {
+        if (res.status == 1) {
+          ui.success(res.info);
+          window.open(res.request_url);
+        } else {
+          ui.error(res.info);
+        }
+    }, 'json');
+    return false;
+}
+</script>
+<include file="__THEME__/public_footer" />

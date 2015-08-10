@@ -1,0 +1,25 @@
+
+<div id="col10" class="clearfix">
+  <div id="col12" class="main-left content-bg">
+    <!--左边 -->
+    <!--tab菜单-->
+    <div id="aside">
+      <dl class="nav-left border-no minH" id="message_item_list">
+        <dd class="current" id="at"><a href="javascript:;" onclick="message.at('at')">@到我的<php>if($count['unread_atme']>0):echo '<i class="num">'.($count['unread_atme']>9?'···':$count['unread_atme']).'</i>';endif;</php></a></dd>
+        <dd id="comment"><a href="javascript:;" onclick="message.comment('comment')">我的评论<php>if($count['unread_comment']>0):echo '<i class="num">'.($count['unread_comment']>9?'···':$count['unread_comment']).'</i>';endif;</php></a></dd>
+        <dd id="digg"><a href="javascript:;" onclick="message.notify('notify','digg')">我的点赞<php>if($count['unread_digg']>0):echo '<i class="num">'.($count['unread_digg']>9?'···':$count['unread_digg']).'</i>';endif;</php></a></dd>
+        <dd id="message"><a href="javascript:;" onclick="message.messageList('message')">我的私信<php>if($count['unread_message']>0):echo '<i class="num">'.($count['unread_message']>9?'···':$count['unread_message']).'</i>';endif;</php></a></dd>
+        <dd id="system"><a href="javascript:;" onclick="message.notify('notify')">系统消息<php>if($count['unread_notify']>0):echo '<i class="num">'.($count['unread_notify']>9?'···':$count['unread_notify']).'</i>';endif;</php></a></dd>
+      </dl>
+    </div>
+  </div>
+  <div id="col11" class="main-right minH"></div>
+ </div>
+<script type="text/javascript">
+  if($('#message_item_list i.num').size()){
+	  $('#message_item_list i.num:first').parent('a').click();
+  }else{
+	  message.at('at');
+  }
+  $('#tsbox').css('position','fixed');
+</script>

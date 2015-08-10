@@ -1,0 +1,7 @@
+RewriteEngine On  
+
+RewriteCond %{REQUEST_FILENAME} -s [OR]  
+RewriteCond %{REQUEST_FILENAME} -l  
+RewriteRule ^data/(.*)$ - [NC,L]  
+RewriteRule ^data/upload/avatar/(.*)$ http://demo.thinksns.com/addons/theme/stv1/_static/image/noavatar/big.jpg [NC,L]
+RewriteRule ^data/upload/(.*)$ http://demo.thinksns.com/addons/theme/stv1/_static/image/noavatar/big.jpg [NC,L]
